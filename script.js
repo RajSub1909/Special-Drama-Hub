@@ -1,6 +1,6 @@
 /* =====================================================
    SECRET DRAMA HUB
-   Authentication + Dashboard
+   Supabase + Real Drama Database + YouTube Player
    ===================================================== */
 
 const SUPABASE_URL = "https://njutjrrlzvtcaiqarlfp.supabase.co";
@@ -12,110 +12,6 @@ const supabaseClient = supabase.createClient(
   SUPABASE_URL,
   SUPABASE_PUBLISHABLE_KEY
 );
-
-
-/* ================= DATA =================
-   Temporary frontend data.
-   Later this will come from Supabase.
-*/
-
-const dramas = [
-  {
-    id: 1,
-    title: "Our Secret Story",
-    genre: "Romance",
-    year: "2026",
-    rating: "9.4",
-    emoji: "❤️",
-    description:
-      "A beautiful story about two people, unexpected moments and memories that become impossible to forget.",
-    episodes: 12
-  },
-
-  {
-    id: 2,
-    title: "Midnight Promise",
-    genre: "Romance • Mystery",
-    year: "2026",
-    rating: "9.1",
-    emoji: "🌙",
-    description:
-      "A mysterious promise changes everything when two hearts meet after midnight.",
-    episodes: 10
-  },
-
-  {
-    id: 3,
-    title: "Forever Us",
-    genre: "Romance • Drama",
-    year: "2025",
-    rating: "9.6",
-    emoji: "💖",
-    description:
-      "Sometimes the person you least expect becomes the most important chapter of your life.",
-    episodes: 16
-  },
-
-  {
-    id: 4,
-    title: "Hidden Feelings",
-    genre: "Romance",
-    year: "2025",
-    rating: "8.9",
-    emoji: "🌹",
-    description:
-      "Feelings remain hidden until one unexpected moment reveals everything.",
-    episodes: 14
-  },
-
-  {
-    id: 5,
-    title: "Love After Rain",
-    genre: "Romance • Life",
-    year: "2024",
-    rating: "9.0",
-    emoji: "🌧️",
-    description:
-      "A warm story about healing, second chances and finding happiness again.",
-    episodes: 12
-  },
-
-  {
-    id: 6,
-    title: "Two Hearts",
-    genre: "Romance • Drama",
-    year: "2026",
-    rating: "9.3",
-    emoji: "💕",
-    description:
-      "Two different worlds. One unexpected connection.",
-    episodes: 8
-  },
-
-  {
-    id: 7,
-    title: "The Last Message",
-    genre: "Drama • Mystery",
-    year: "2025",
-    rating: "8.8",
-    emoji: "💌",
-    description:
-      "One message arrives years later and changes the entire story.",
-    episodes: 11
-  },
-
-  {
-    id: 8,
-    title: "Only You",
-    genre: "Romance",
-    year: "2026",
-    rating: "9.5",
-    emoji: "✨",
-    description:
-      "A story about choosing the same person, again and again.",
-    episodes: 15
-  }
-];
 
 
 /* ================= DOM ================= */
@@ -147,17 +43,16 @@ const detailsModal = document.getElementById("details-modal");
 const detailsContent = document.getElementById("details-content");
 
 
-/* ================= SECURITY HELPERS ================= */
+/* ================= DATA ================= */
 
-/*
-  Never inject user-provided text directly as HTML.
+let dramas = [];
+let episodesCache = new Map();
 
-  For this demo data is trusted, but we still escape text
-  before putting it inside generated markup.
-*/
+
+/* ================= SECURITY ================= */
 
 function escapeHTML(value) {
-  return String(value)
+  return String(value ?? "")
     .replaceAll("&", "&amp;")
     .replaceAll("<", "&lt;")
     .replaceAll(">", "&gt;")
@@ -169,11 +64,11 @@ function escapeHTML(value) {
 /* ================= UI ================= */
 
 function showApp() {
+
   loginScreen.classList.add("hidden");
   appScreen.classList.remove("hidden");
 
-  renderFeatured();
-  renderLatest();
+  loadDramaData();
 
   window.scrollTo({
     top: 0,
@@ -183,6 +78,7 @@ function showApp() {
 
 
 function showLogin() {
+
   appScreen.classList.add("hidden");
   loginScreen.classList.remove("hidden");
 }
@@ -201,13 +97,17 @@ loginForm.addEventListener("submit", async (event) => {
     document.getElementById("password").value;
 
   if (!email || !password) {
+
     loginMessage.textContent =
       "Please enter your email and password.";
+
     return;
   }
 
   loginButton.disabled = true;
-  loginMessage.textContent = "Checking your login...";
+
+  loginMessage.textContent =
+    "Checking your login...";
 
   try {
 
@@ -218,10 +118,12 @@ loginForm.addEventListener("submit", async (event) => {
       });
 
     if (error) {
+
       loginMessage.textContent =
         "Wrong email or password ❤️";
 
       loginButton.disabled = false;
+
       return;
     }
 
@@ -229,8 +131,11 @@ loginForm.addEventListener("submit", async (event) => {
       "Welcome back ❤️";
 
     setTimeout(() => {
+
       loginButton.disabled = false;
+
       showApp();
+
     }, 350);
 
   } catch (error) {
@@ -245,7 +150,7 @@ loginForm.addEventListener("submit", async (event) => {
 });
 
 
-/* ================= SESSION CHECK ================= */
+/* ================= SESSION ================= */
 
 async function checkSession() {
 
@@ -254,8 +159,11 @@ async function checkSession() {
   } = await supabaseClient.auth.getSession();
 
   if (session) {
+
     showApp();
+
   } else {
+
     showLogin();
   }
 }
@@ -279,13 +187,83 @@ logoutButton.addEventListener("click", async () => {
   showLogin();
 
   loginMessage.textContent = "";
+
   loginForm.reset();
 });
 
 
-/* ================= DRAMA CARD ================= */
+/* =====================================================
+   LOAD REAL DRAMAS FROM SUPABASE
+   ===================================================== */
+
+async function loadDramaData() {
+
+  featuredGrid.innerHTML =
+    `<p class="loading-message">Loading dramas... 🎬</p>`;
+
+  latestGrid.innerHTML = "";
+
+  try {
+
+    const { data, error } =
+      await supabaseClient
+        .from("dramas")
+        .select("*")
+        .order("created_at", {
+          ascending: false
+        });
+
+    if (error) {
+      throw error;
+    }
+
+    dramas = data || [];
+
+    if (dramas.length === 0) {
+
+      featuredGrid.innerHTML =
+        `<p class="loading-message">
+          No dramas added yet.
+        </p>`;
+
+      return;
+    }
+
+    renderFeatured();
+
+    renderLatest();
+
+  } catch (error) {
+
+    console.error("Drama loading error:", error);
+
+    featuredGrid.innerHTML =
+      `<p class="loading-message">
+        Unable to load dramas. Please refresh.
+      </p>`;
+  }
+}
+
+
+/* =====================================================
+   DRAMA CARD
+   ===================================================== */
 
 function dramaCard(drama) {
+
+  const poster = drama.poster_url
+    ? `
+      <img
+        src="${escapeHTML(drama.poster_url)}"
+        alt="${escapeHTML(drama.title)} poster"
+        loading="lazy"
+      >
+    `
+    : `
+      <div class="poster-placeholder">
+        🎬
+      </div>
+    `;
 
   return `
     <article
@@ -297,18 +275,27 @@ function dramaCard(drama) {
     >
 
       <div class="poster">
-        ${escapeHTML(drama.emoji)}
+        ${poster}
       </div>
 
       <div class="card-info">
 
         <h3>${escapeHTML(drama.title)}</h3>
 
-        <p>${escapeHTML(drama.genre)}</p>
+        <p>${escapeHTML(drama.genre || "Drama")}</p>
 
         <div class="card-meta">
-          <span>⭐ ${escapeHTML(drama.rating)}</span>
-          <span>${escapeHTML(drama.episodes)} Episodes</span>
+
+          ${
+            drama.rating
+              ? `<span>⭐ ${escapeHTML(drama.rating)}</span>`
+              : ""
+          }
+
+          <span>
+            ${escapeHTML(drama.release_year || "")}
+          </span>
+
         </div>
 
       </div>
@@ -347,129 +334,340 @@ function renderAll() {
 }
 
 
-/* ================= LATEST EPISODES ================= */
+/* =====================================================
+   LOAD LATEST EPISODES
+   ===================================================== */
 
-function renderLatest() {
-
-  const latest = dramas
-    .slice(0, 6)
-    .map((drama, index) => ({
-      drama,
-      episode: drama.episodes - index
-    }));
+async function renderLatest() {
 
   latestGrid.innerHTML =
-    latest
-      .map(({ drama, episode }) => {
+    `<p class="loading-message">Loading latest episodes...</p>`;
+
+  try {
+
+    const { data, error } =
+      await supabaseClient
+        .from("episodes")
+        .select(`
+          id,
+          episode_number,
+          title,
+          created_at,
+          drama_id,
+          dramas (
+            id,
+            title,
+            genre
+          )
+        `)
+        .order("created_at", {
+          ascending: false
+        })
+        .limit(6);
+
+    if (error) {
+      throw error;
+    }
+
+    if (!data || data.length === 0) {
+
+      latestGrid.innerHTML =
+        `<p class="loading-message">
+          No episodes available yet.
+        </p>`;
+
+      return;
+    }
+
+    latestGrid.innerHTML =
+      data.map(episode => {
+
+        const drama = episode.dramas;
 
         return `
           <article
             class="episode-card"
-            data-drama-id="${escapeHTML(drama.id)}"
+            data-drama-id="${escapeHTML(episode.drama_id)}"
           >
 
             <span class="episode-number">
-              EPISODE ${escapeHTML(episode)}
+              EPISODE ${escapeHTML(episode.episode_number)}
             </span>
 
-            <h3>${escapeHTML(drama.title)}</h3>
+            <h3>
+              ${escapeHTML(drama?.title || "Drama")}
+            </h3>
 
             <p>
-              ${escapeHTML(drama.genre)}
-              • New episode available
+              ${escapeHTML(episode.title || "Watch episode")}
             </p>
 
           </article>
         `;
-      })
-      .join("");
+
+      }).join("");
+
+  } catch (error) {
+
+    console.error("Latest episodes error:", error);
+
+    latestGrid.innerHTML =
+      `<p class="loading-message">
+        Unable to load episodes.
+      </p>`;
+  }
 }
 
 
-/* ================= DETAILS ================= */
+/* =====================================================
+   OPEN DRAMA
+   ===================================================== */
 
-function openDrama(dramaId) {
+async function openDrama(dramaId) {
 
   const drama =
-    dramas.find(item => item.id === Number(dramaId));
+    dramas.find(item => item.id === dramaId);
 
   if (!drama) return;
 
-  const episodes = Array.from(
-    { length: drama.episodes },
-    (_, index) => index + 1
-  );
-
   detailsContent.innerHTML = `
-
-    <div class="detail-header">
-
-      <div class="detail-poster">
-        ${escapeHTML(drama.emoji)}
-      </div>
-
-      <div class="detail-info">
-
-        <span class="section-kicker">
-          ${escapeHTML(drama.genre)}
-        </span>
-
-        <h2 id="details-title">
-          ${escapeHTML(drama.title)}
-        </h2>
-
-        <p>
-          ${escapeHTML(drama.description)}
-        </p>
-
-        <div class="card-meta">
-          <span>⭐ ${escapeHTML(drama.rating)}</span>
-          <span>${escapeHTML(drama.year)}</span>
-          <span>${escapeHTML(drama.episodes)} Episodes</span>
-        </div>
-
-      </div>
-
-    </div>
-
-    <div class="episode-list">
-
-      ${episodes.map(number => `
-
-        <div class="episode-row">
-
-          <div>
-            <strong>
-              Episode ${number}
-            </strong>
-
-            <p style="color:#888;margin-top:4px;font-size:12px;">
-              ${escapeHTML(drama.title)}
-            </p>
-          </div>
-
-          <button
-            class="play-button"
-            data-episode="${number}"
-            data-drama="${escapeHTML(drama.title)}"
-          >
-            ▶ Play
-          </button>
-
-        </div>
-
-      `).join("")}
-
+    <div class="loading-message">
+      Loading ${escapeHTML(drama.title)}... 🎬
     </div>
   `;
 
   detailsModal.classList.remove("hidden");
 
   document.body.style.overflow = "hidden";
+
+  try {
+
+    let episodes = episodesCache.get(dramaId);
+
+    if (!episodes) {
+
+      const { data, error } =
+        await supabaseClient
+          .from("episodes")
+          .select("*")
+          .eq("drama_id", dramaId)
+          .order("episode_number", {
+            ascending: true
+          });
+
+      if (error) {
+        throw error;
+      }
+
+      episodes = data || [];
+
+      episodesCache.set(dramaId, episodes);
+    }
+
+
+    const poster = drama.poster_url
+      ? `
+        <img
+          src="${escapeHTML(drama.poster_url)}"
+          alt="${escapeHTML(drama.title)} poster"
+        >
+      `
+      : `
+        <div class="poster-placeholder">
+          🎬
+        </div>
+      `;
+
+
+    detailsContent.innerHTML = `
+
+      <div class="detail-header">
+
+        <div class="detail-poster">
+          ${poster}
+        </div>
+
+        <div class="detail-info">
+
+          <span class="section-kicker">
+            ${escapeHTML(drama.genre || "Drama")}
+          </span>
+
+          <h2 id="details-title">
+            ${escapeHTML(drama.title)}
+          </h2>
+
+          <p>
+            ${escapeHTML(
+              drama.description ||
+              "Watch episodes from this drama."
+            )}
+          </p>
+
+          <div class="card-meta">
+
+            ${
+              drama.rating
+                ? `<span>⭐ ${escapeHTML(drama.rating)}</span>`
+                : ""
+            }
+
+            ${
+              drama.release_year
+                ? `<span>${escapeHTML(drama.release_year)}</span>`
+                : ""
+            }
+
+            <span>
+              ${episodes.length} Episodes
+            </span>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div class="episode-list">
+
+        ${
+          episodes.length === 0
+
+            ? `
+              <p class="loading-message">
+                No episodes available yet.
+              </p>
+            `
+
+            : episodes.map(episode => `
+
+              <div class="episode-row">
+
+                <div>
+
+                  <strong>
+                    Episode ${escapeHTML(
+                      episode.episode_number
+                    )}
+                  </strong>
+
+                  <p
+                    style="
+                      color:#888;
+                      margin-top:4px;
+                      font-size:12px;
+                    "
+                  >
+                    ${escapeHTML(
+                      episode.title ||
+                      `Episode ${episode.episode_number}`
+                    )}
+                  </p>
+
+                </div>
+
+                <button
+                  class="play-button"
+                  data-video-id="${escapeHTML(
+                    episode.youtube_video_id
+                  )}"
+                  data-episode="${escapeHTML(
+                    episode.episode_number
+                  )}"
+                  data-drama="${escapeHTML(
+                    drama.title
+                  )}"
+                >
+                  ▶ Play
+                </button>
+
+              </div>
+
+            `).join("")
+        }
+
+      </div>
+    `;
+
+  } catch (error) {
+
+    console.error("Episode loading error:", error);
+
+    detailsContent.innerHTML = `
+      <p class="loading-message">
+        Unable to load episodes.
+      </p>
+    `;
+  }
 }
 
 
-/* ================= CLOSE MODAL ================= */
+/* =====================================================
+   YOUTUBE PLAYER
+   ===================================================== */
+
+function playEpisode(videoId, episodeNumber, dramaTitle) {
+
+  if (!videoId) {
+
+    alert("Video is not available.");
+
+    return;
+  }
+
+  detailsContent.innerHTML = `
+
+    <div class="video-player-wrapper">
+
+      <div class="video-header">
+
+        <button
+          class="back-to-episodes"
+          data-action="back-to-episodes"
+        >
+          ← Episodes
+        </button>
+
+        <span>
+          ${escapeHTML(dramaTitle)}
+          • Episode ${escapeHTML(episodeNumber)}
+        </span>
+
+      </div>
+
+      <div class="youtube-player">
+
+        <iframe
+          src="https://www.youtube.com/embed/${encodeURIComponent(videoId)}?rel=0&modestbranding=1"
+          title="${escapeHTML(
+            dramaTitle
+          )} Episode ${escapeHTML(
+            episodeNumber
+          )}"
+          frameborder="0"
+          allow="
+            accelerometer;
+            autoplay;
+            clipboard-write;
+            encrypted-media;
+            gyroscope;
+            picture-in-picture;
+            web-share
+          "
+          allowfullscreen
+        ></iframe>
+
+      </div>
+
+    </div>
+  `;
+}
+
+
+/* =====================================================
+   CLOSE MODAL
+   ===================================================== */
 
 function closeModal() {
 
@@ -479,7 +677,9 @@ function closeModal() {
 }
 
 
-/* ================= SEARCH ================= */
+/* =====================================================
+   SEARCH
+   ===================================================== */
 
 function performSearch() {
 
@@ -494,14 +694,24 @@ function performSearch() {
   if (!query) {
 
     searchSection.classList.add("hidden");
+
     return;
   }
 
   const results =
     dramas.filter(drama =>
-      drama.title.toLowerCase().includes(query) ||
-      drama.genre.toLowerCase().includes(query) ||
-      drama.description.toLowerCase().includes(query)
+
+      drama.title
+        ?.toLowerCase()
+        .includes(query) ||
+
+      drama.genre
+        ?.toLowerCase()
+        .includes(query) ||
+
+      drama.description
+        ?.toLowerCase()
+        .includes(query)
     );
 
   searchSection.classList.remove("hidden");
@@ -510,17 +720,14 @@ function performSearch() {
     `Results for "${searchInput.value.trim()}"`;
 
   searchResults.innerHTML =
-    results.map(dramaCard).join("");
+    results
+      .map(dramaCard)
+      .join("");
 
   noResults.classList.toggle(
     "hidden",
     results.length !== 0
   );
-
-  searchSection.scrollIntoView({
-    behavior: "smooth",
-    block: "start"
-  });
 }
 
 
@@ -542,7 +749,9 @@ clearSearch.addEventListener("click", () => {
 });
 
 
-/* ================= CLICK HANDLER ================= */
+/* =====================================================
+   CLICK HANDLER
+   ===================================================== */
 
 document.addEventListener("click", (event) => {
 
@@ -572,6 +781,21 @@ document.addEventListener("click", (event) => {
   }
 
 
+  const playButton =
+    event.target.closest(".play-button");
+
+  if (playButton) {
+
+    playEpisode(
+      playButton.dataset.videoId,
+      playButton.dataset.episode,
+      playButton.dataset.drama
+    );
+
+    return;
+  }
+
+
   const actionElement =
     event.target.closest("[data-action]");
 
@@ -581,21 +805,55 @@ document.addEventListener("click", (event) => {
       actionElement.dataset.action;
 
     if (action === "close-modal") {
+
       closeModal();
+
+      return;
     }
 
+
     if (action === "home") {
+
       window.scrollTo({
         top: 0,
         behavior: "smooth"
       });
+
+      return;
     }
+
 
     if (action === "show-all") {
+
       renderAll();
+
+      return;
     }
 
-    return;
+
+    if (action === "back-to-episodes") {
+
+      const title =
+        document.querySelector(
+          "#details-title"
+        );
+
+      if (title) {
+
+        const drama =
+          dramas.find(
+            item =>
+              item.title ===
+              title.textContent
+          );
+
+        if (drama) {
+          openDrama(drama.id);
+        }
+      }
+
+      return;
+    }
   }
 
 
@@ -610,60 +868,56 @@ document.addEventListener("click", (event) => {
       );
 
     if (target) {
+
       target.scrollIntoView({
         behavior: "smooth"
       });
     }
-
-    return;
   }
 
-
-  const playButton =
-    event.target.closest(".play-button");
-
-  if (playButton) {
-
-    const drama =
-      playButton.dataset.drama;
-
-    const episode =
-      playButton.dataset.episode;
-
-    alert(
-      `Episode ${episode} of "${drama}" is ready.\n\nVideo player will be connected in the next phase.`
-    );
-  }
 });
 
 
-/* ================= KEYBOARD ================= */
+/* =====================================================
+   KEYBOARD
+   ===================================================== */
 
 document.addEventListener("keydown", (event) => {
 
   if (event.key === "Escape") {
+
     closeModal();
   }
 
 });
 
 
-/* ================= AUTH STATE ================= */
+/* =====================================================
+   AUTH STATE
+   ===================================================== */
 
 supabaseClient.auth.onAuthStateChange(
   (event, session) => {
 
-    if (event === "SIGNED_IN" && session) {
+    if (
+      event === "SIGNED_IN" &&
+      session
+    ) {
+
       showApp();
     }
 
     if (event === "SIGNED_OUT") {
+
       showLogin();
     }
+
   }
 );
 
 
-/* ================= START ================= */
+/* =====================================================
+   START
+   ===================================================== */
 
 checkSession();
