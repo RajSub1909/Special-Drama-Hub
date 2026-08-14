@@ -8,8 +8,34 @@
 </head>
 
 <body>
-  <h1>Welcome to Your Secret Drama Hub ❤️</h1>
-  <p>A special place made just for you 😌❤️</p>
+  <div class="login-container">
+  <div class="login-card">
+    <div class="heart">❤️</div>
+
+    <h1>Secret Drama Hub</h1>
+    <p class="subtitle">A special place made just for you 😌</p>
+
+    <form id="login-form">
+      <input
+        type="email"
+        id="email"
+        placeholder="Email address"
+        required
+      >
+
+      <input
+        type="password"
+        id="password"
+        placeholder="Password"
+        required
+      >
+
+      <button type="submit">Enter ❤️</button>
+
+      <p id="login-message"></p>
+    </form>
+  </div>
+</div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="script.js"></script>
