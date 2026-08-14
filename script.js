@@ -424,67 +424,51 @@ async function renderLatest() {
    ===================================================== */
 
 async function openDrama(dramaId) {
-
-  const drama =
-    dramas.find(item => item.id === dramaId);
-
-  if (!drama) return;
-
-  detailsContent.innerHTML = `
-    <div class="loading-message">
-      Loading ${escapeHTML(drama.title)}... 🎬
-    </div>
-  `;
-
-  detailsModal.classList.remove("hidden");
-
-  document.body.style.overflow = "hidden";
-
   try {
+    detailsContent.innerHTML = `
+      <div style="text-align:center;padding:40px;">
+        <div style="font-size:40px;">🎬</div>
+        <p>Loading episodes...</p>
+      </div>
+    `;
 
-    let episodes = episodesCache.get(dramaId);
+    detailsModal.classList.remove("hidden");
+    document.body.style.overflow = "hidden";
 
-    if (!episodes) {
+    // Get drama
+    const { data: drama, error: dramaError } =
+      await supabaseClient
+        .from("dramas")
+        .select("*")
+        .eq("id", dramaId)
+        .single();
 
-      const { data, error } =
-        await supabaseClient
-          .from("episodes")
-          .select("*")
-          .eq("drama_id", dramaId)
-          .order("episode_number", {
-            ascending: true
-          });
+    if (dramaError) throw dramaError;
 
-      if (error) {
-        throw error;
-      }
+    // Get real episodes
+    const { data: episodes, error: episodeError } =
+      await supabaseClient
+        .from("episodes")
+        .select("*")
+        .eq("drama_id", dramaId)
+        .order("episode_number", { ascending: true });
 
-      episodes = data || [];
-
-      episodesCache.set(dramaId, episodes);
-    }
-
-
-    const poster = drama.poster_url
-      ? `
-        <img
-          src="${escapeHTML(drama.poster_url)}"
-          alt="${escapeHTML(drama.title)} poster"
-        >
-      `
-      : `
-        <div class="poster-placeholder">
-          🎬
-        </div>
-      `;
-
+    if (episodeError) throw episodeError;
 
     detailsContent.innerHTML = `
 
       <div class="detail-header">
 
         <div class="detail-poster">
-          ${poster}
+          ${
+            drama.poster_url
+              ? `<img
+                  src="${escapeHTML(drama.poster_url)}"
+                  alt="${escapeHTML(drama.title)}"
+                  style="width:100%;height:100%;object-fit:cover;border-radius:20px;"
+                >`
+              : "🎬"
+          }
         </div>
 
         <div class="detail-info">
@@ -499,72 +483,38 @@ async function openDrama(dramaId) {
 
           <p>
             ${escapeHTML(
-              drama.description ||
-              "Watch episodes from this drama."
+              drama.description || "Watch all episodes."
             )}
           </p>
 
           <div class="card-meta">
-
-            ${
-              drama.rating
-                ? `<span>⭐ ${escapeHTML(drama.rating)}</span>`
-                : ""
-            }
-
-            ${
-              drama.release_year
-                ? `<span>${escapeHTML(drama.release_year)}</span>`
-                : ""
-            }
-
-            <span>
-              ${episodes.length} Episodes
-            </span>
-
+            <span>⭐ ${escapeHTML(drama.rating || "N/A")}</span>
+            <span>${escapeHTML(drama.year || "")}</span>
+            <span>${episodes.length} Episodes</span>
           </div>
 
         </div>
 
       </div>
 
-
       <div class="episode-list">
 
         ${
-          episodes.length === 0
-
-            ? `
-              <p class="loading-message">
-                No episodes available yet.
-              </p>
-            `
-
-            : episodes.map(episode => `
-
+          episodes.length
+            ? episodes.map(episode => `
+              
               <div class="episode-row">
 
                 <div>
-
                   <strong>
-                    Episode ${escapeHTML(
-                      episode.episode_number
-                    )}
+                    Episode ${escapeHTML(episode.episode_number)}
                   </strong>
 
-                  <p
-                    style="
-                      color:#888;
-                      margin-top:4px;
-                      font-size:12px;
-                    "
-                  >
+                  <p style="color:#888;margin-top:4px;font-size:12px;">
                     ${escapeHTML(
-                      episode.title ||
-                      `Episode ${episode.episode_number}`
+                      episode.title || drama.title
                     )}
                   </p>
-
                 </div>
 
                 <button
@@ -575,9 +525,7 @@ async function openDrama(dramaId) {
                   data-episode="${escapeHTML(
                     episode.episode_number
                   )}"
-                  data-drama="${escapeHTML(
-                    drama.title
-                  )}"
+                  data-drama="${escapeHTML(drama.title)}"
                 >
                   ▶ Play
                 </button>
@@ -585,6 +533,11 @@ async function openDrama(dramaId) {
               </div>
 
             `).join("")
+            : `
+              <p style="text-align:center;padding:30px;color:#aaa;">
+                No episodes available yet.
+              </p>
+            `
         }
 
       </div>
@@ -592,16 +545,19 @@ async function openDrama(dramaId) {
 
   } catch (error) {
 
-    console.error("Episode loading error:", error);
+    console.error("Drama loading error:", error);
 
     detailsContent.innerHTML = `
-      <p class="loading-message">
-        Unable to load episodes.
-      </p>
+      <div style="text-align:center;padding:40px;">
+        <div style="font-size:40px;">⚠️</div>
+        <h3>Unable to load drama</h3>
+        <p style="color:#aaa;margin-top:10px;">
+          Please try again.
+        </p>
+      </div>
     `;
   }
 }
-
 
 /* =====================================================
    YOUTUBE PLAYER
