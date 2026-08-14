@@ -4,94 +4,737 @@
   padding: 0;
 }
 
+:root {
+  --bg: #09070d;
+  --bg-soft: #110c16;
+  --card: rgba(255, 255, 255, 0.055);
+  --card-hover: rgba(255, 255, 255, 0.09);
+  --border: rgba(255, 255, 255, 0.1);
+  --text: #fff;
+  --muted: #aaa0b1;
+  --pink: #ff4f91;
+  --purple: #a855f7;
+  --danger: #ff5c73;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   min-height: 100vh;
-  font-family: Arial, sans-serif;
-  background: linear-gradient(135deg, #160c1f, #35152f, #160c1f);
-  color: white;
+  background:
+    radial-gradient(circle at 15% 10%, rgba(168, 85, 247, 0.15), transparent 30%),
+    radial-gradient(circle at 85% 20%, rgba(255, 79, 145, 0.12), transparent 30%),
+    var(--bg);
+  color: var(--text);
+  font-family: Inter, Arial, sans-serif;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+.hidden {
+  display: none !important;
+}
+
+
+/* ================= LOGIN ================= */
+
+.login-screen {
+  min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 20px;
+  padding: 25px;
+  position: relative;
+  overflow: hidden;
 }
 
-.login-container {
-  width: 100%;
-  max-width: 430px;
+.login-glow {
+  position: absolute;
+  width: 350px;
+  height: 350px;
+  border-radius: 50%;
+  filter: blur(100px);
+  opacity: 0.22;
+  pointer-events: none;
+}
+
+.glow-one {
+  background: var(--pink);
+  top: -120px;
+  left: -100px;
+}
+
+.glow-two {
+  background: var(--purple);
+  right: -120px;
+  bottom: -120px;
 }
 
 .login-card {
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 28px;
-  padding: 40px 30px;
-  text-align: center;
-  backdrop-filter: blur(14px);
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
+  width: 100%;
+  max-width: 440px;
+  padding: 45px 35px;
+  border: 1px solid var(--border);
+  border-radius: 30px;
+  background: rgba(17, 12, 22, 0.78);
+  backdrop-filter: blur(20px);
+  box-shadow: 0 30px 100px rgba(0, 0, 0, 0.55);
+  position: relative;
+  z-index: 2;
 }
 
-.heart {
-  font-size: 55px;
+.brand-heart {
+  font-size: 58px;
+  text-align: center;
   margin-bottom: 15px;
 }
 
-h1 {
-  font-size: 32px;
-  margin-bottom: 10px;
+.eyebrow,
+.section-kicker {
+  color: var(--pink);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 2px;
+}
+
+.login-card h1 {
+  font-size: 35px;
+  text-align: center;
+  margin: 12px 0 8px;
 }
 
 .subtitle {
-  color: #d8c8d8;
-  margin-bottom: 30px;
-  line-height: 1.5;
+  text-align: center;
+  color: var(--muted);
+  margin-bottom: 32px;
 }
 
 #login-form {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 10px;
+}
+
+#login-form label {
+  font-size: 13px;
+  color: #d5cad8;
+  margin-top: 5px;
 }
 
 #login-form input {
   width: 100%;
-  padding: 15px 16px;
-  border: none;
-  outline: none;
+  border: 1px solid var(--border);
   border-radius: 14px;
-  background: rgba(255, 255, 255, 0.12);
+  padding: 15px;
+  background: rgba(255, 255, 255, 0.06);
   color: white;
-  font-size: 15px;
-}
-
-#login-form input::placeholder {
-  color: #c9bcc9;
+  outline: none;
+  transition: 0.2s;
 }
 
 #login-form input:focus {
-  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-color: rgba(255, 79, 145, 0.7);
+  box-shadow: 0 0 0 3px rgba(255, 79, 145, 0.08);
 }
 
 #login-form button {
-  border: none;
+  border: 0;
   border-radius: 14px;
-  padding: 15px;
-  margin-top: 5px;
-  font-size: 16px;
-  font-weight: bold;
-  cursor: pointer;
-  background: white;
-  color: #35152f;
-  transition: transform 0.2s ease, opacity 0.2s ease;
+  padding: 16px;
+  margin-top: 12px;
+  background: linear-gradient(135deg, #ff4f91, #a855f7);
+  color: white;
+  font-weight: 800;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  transition: 0.2s;
 }
 
 #login-form button:hover {
   transform: translateY(-2px);
-  opacity: 0.92;
+}
+
+#login-form button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 #login-message {
-  min-height: 22px;
+  min-height: 20px;
+  color: #ffb9d2;
+  text-align: center;
+  font-size: 13px;
   margin-top: 5px;
-  font-size: 14px;
-  color: #ffd6e8;
+}
+
+.login-note {
+  text-align: center;
+  color: #756c78;
+  font-size: 12px;
+  margin-top: 25px;
+}
+
+
+/* ================= NAVBAR ================= */
+
+.navbar {
+  height: 78px;
+  border-bottom: 1px solid var(--border);
+  background: rgba(9, 7, 13, 0.82);
+  backdrop-filter: blur(18px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 5%;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+}
+
+.nav-logo {
+  font-size: 27px;
+}
+
+.nav-brand strong {
+  display: block;
+  font-size: 15px;
+}
+
+.nav-brand small {
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.nav-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.icon-button,
+.logout-button {
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: white;
+  border-radius: 12px;
+  padding: 10px 14px;
+}
+
+.logout-button:hover,
+.icon-button:hover {
+  background: var(--card-hover);
+}
+
+
+/* ================= SEARCH ================= */
+
+.search-area {
+  max-width: 1300px;
+  margin: auto;
+  padding: 25px 5% 0;
+}
+
+.search-box {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 15px;
+  padding: 0 16px;
+}
+
+.search-box input {
+  flex: 1;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: white;
+  padding: 14px 0;
+}
+
+.search-box input::placeholder {
+  color: #77707c;
+}
+
+.clear-search {
+  border: 0;
+  background: transparent;
+  color: #aaa;
+  font-size: 22px;
+}
+
+
+/* ================= MAIN ================= */
+
+.main-content {
+  max-width: 1300px;
+  margin: auto;
+  padding: 25px 5% 70px;
+}
+
+.hero {
+  min-height: 390px;
+  border: 1px solid var(--border);
+  border-radius: 28px;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 55px;
+  margin-bottom: 60px;
+  background:
+    radial-gradient(circle at 80% 50%, rgba(168, 85, 247, 0.3), transparent 35%),
+    radial-gradient(circle at 70% 20%, rgba(255, 79, 145, 0.2), transparent 30%),
+    #130d1b;
+}
+
+.hero-content {
+  max-width: 600px;
+  position: relative;
+  z-index: 2;
+}
+
+.hero-tag {
+  display: inline-block;
+  color: #ff8eb8;
+  font-size: 12px;
+  font-weight: bold;
+  letter-spacing: 2px;
+  margin-bottom: 15px;
+}
+
+.hero h2 {
+  font-size: clamp(42px, 6vw, 72px);
+  line-height: 0.98;
+  margin-bottom: 20px;
+}
+
+.hero p {
+  color: #b9afbd;
+  max-width: 520px;
+  line-height: 1.7;
+  font-size: 16px;
+}
+
+.primary-button {
+  border: 0;
+  background: white;
+  color: #160c1f;
+  border-radius: 13px;
+  padding: 14px 20px;
+  font-weight: 800;
+  margin-top: 25px;
+  display: flex;
+  gap: 14px;
+  align-items: center;
+}
+
+.hero-art {
+  position: absolute;
+  right: 8%;
+  width: 300px;
+  height: 300px;
+}
+
+.hero-circle {
+  width: 240px;
+  height: 240px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ff4f91, #a855f7);
+  display: grid;
+  place-items: center;
+  font-size: 90px;
+  box-shadow: 0 0 100px rgba(255, 79, 145, 0.25);
+}
+
+.floating-card {
+  position: absolute;
+  padding: 15px;
+  border-radius: 16px;
+  background: rgba(20, 14, 28, 0.85);
+  border: 1px solid var(--border);
+  backdrop-filter: blur(10px);
+}
+
+.card-one {
+  top: 15px;
+  right: 0;
+}
+
+.card-two {
+  bottom: 30px;
+  left: 10px;
+}
+
+.card-three {
+  top: 45%;
+  right: -15px;
+}
+
+
+/* ================= SECTIONS ================= */
+
+.content-section {
+  margin-top: 55px;
+}
+
+.section-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  margin-bottom: 22px;
+}
+
+.section-heading h2 {
+  margin-top: 5px;
+  font-size: 27px;
+}
+
+.text-button {
+  border: 0;
+  background: transparent;
+  color: #ff7ead;
+}
+
+
+/* ================= DRAMA CARDS ================= */
+
+.drama-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
+}
+
+.drama-card {
+  border: 1px solid var(--border);
+  border-radius: 19px;
+  overflow: hidden;
+  background: var(--card);
+  transition: 0.25s;
+  cursor: pointer;
+}
+
+.drama-card:hover {
+  transform: translateY(-6px);
+  background: var(--card-hover);
+  border-color: rgba(255, 255, 255, 0.18);
+}
+
+.poster {
+  height: 230px;
+  display: grid;
+  place-items: center;
+  font-size: 60px;
+  background: linear-gradient(135deg, #25132e, #111);
+}
+
+.card-info {
+  padding: 16px;
+}
+
+.card-info h3 {
+  font-size: 16px;
+  margin-bottom: 7px;
+}
+
+.card-info p {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.card-meta {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 14px;
+  color: #d0c5d3;
+  font-size: 11px;
+}
+
+
+/* ================= EPISODES ================= */
+
+.episode-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+}
+
+.episode-card {
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 18px;
+  background: var(--card);
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.episode-card:hover {
+  background: var(--card-hover);
+}
+
+.episode-number {
+  color: var(--pink);
+  font-size: 11px;
+  font-weight: bold;
+}
+
+.episode-card h3 {
+  margin: 7px 0;
+}
+
+.episode-card p {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+
+/* ================= EMPTY ================= */
+
+.empty-state {
+  padding: 50px 20px;
+  text-align: center;
+  border: 1px dashed var(--border);
+  border-radius: 20px;
+}
+
+.empty-state div {
+  font-size: 40px;
+  margin-bottom: 10px;
+}
+
+.empty-state p {
+  color: var(--muted);
+  margin-top: 6px;
+}
+
+
+/* ================= MODAL ================= */
+
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+}
+
+.modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(8px);
+}
+
+.modal-card {
+  width: min(850px, 100%);
+  max-height: 90vh;
+  overflow: auto;
+  position: relative;
+  z-index: 2;
+  background: #120d18;
+  border: 1px solid var(--border);
+  border-radius: 25px;
+  padding: 30px;
+}
+
+.modal-close {
+  position: absolute;
+  right: 20px;
+  top: 18px;
+  border: 0;
+  background: rgba(255,255,255,0.08);
+  color: white;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  font-size: 23px;
+}
+
+.detail-header {
+  display: flex;
+  gap: 25px;
+  align-items: center;
+}
+
+.detail-poster {
+  width: 190px;
+  height: 250px;
+  border-radius: 18px;
+  display: grid;
+  place-items: center;
+  font-size: 70px;
+  background: linear-gradient(135deg, #2b1635, #111);
+  flex-shrink: 0;
+}
+
+.detail-info h2 {
+  font-size: 35px;
+  margin: 10px 0;
+}
+
+.detail-info p {
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+.episode-list {
+  margin-top: 30px;
+  display: grid;
+  gap: 10px;
+}
+
+.episode-row {
+  border: 1px solid var(--border);
+  background: var(--card);
+  padding: 15px;
+  border-radius: 13px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.play-button {
+  border: 0;
+  background: var(--pink);
+  color: white;
+  border-radius: 10px;
+  padding: 8px 14px;
+}
+
+
+/* ================= FOOTER ================= */
+
+.footer {
+  max-width: 1300px;
+  margin: auto;
+  padding: 30px 5%;
+  border-top: 1px solid var(--border);
+  color: #aaa;
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.footer p {
+  margin-top: 6px;
+  font-size: 12px;
+  color: #706976;
+}
+
+
+/* ================= RESPONSIVE ================= */
+
+@media (max-width: 1000px) {
+  .drama-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .episode-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .hero-art {
+    opacity: 0.45;
+    right: -20px;
+  }
+}
+
+@media (max-width: 700px) {
+
+  .navbar {
+    padding: 0 18px;
+  }
+
+  .nav-brand strong {
+    font-size: 13px;
+  }
+
+  .hero {
+    padding: 35px 25px;
+    min-height: 420px;
+  }
+
+  .hero-art {
+    opacity: 0.18;
+    right: -70px;
+  }
+
+  .drama-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .poster {
+    height: 190px;
+  }
+
+  .episode-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .detail-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .detail-poster {
+    width: 150px;
+    height: 200px;
+  }
+
+  .detail-info h2 {
+    font-size: 27px;
+  }
+
+  .footer {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 430px) {
+
+  .login-card {
+    padding: 35px 22px;
+  }
+
+  .login-card h1 {
+    font-size: 28px;
+  }
+
+  .drama-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .poster {
+    height: 165px;
+    font-size: 48px;
+  }
+
+  .card-info {
+    padding: 12px;
+  }
+
+  .card-info h3 {
+    font-size: 14px;
+  }
 }
