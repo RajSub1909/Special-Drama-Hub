@@ -47,6 +47,7 @@ const detailsContent = document.getElementById("details-content");
 
 let dramas = [];
 let episodesCache = new Map();
+let currentUser = null;
 
 
 /* ================= SECURITY ================= */
@@ -160,9 +161,13 @@ async function checkSession() {
 
   if (session) {
 
+    currentUser = session.user;
+
     showApp();
 
   } else {
+
+    currentUser = null;
 
     showLogin();
   }
