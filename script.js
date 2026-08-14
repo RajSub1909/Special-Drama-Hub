@@ -70,6 +70,7 @@ function showApp() {
   appScreen.classList.remove("hidden");
 
   loadDramaData();
+  renderContinueWatching();
 
   window.scrollTo({
     top: 0,
