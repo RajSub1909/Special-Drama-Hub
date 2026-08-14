@@ -676,21 +676,21 @@ function renderContinueWatching() {
 }
 function playEpisode(videoId, episodeNumber, dramaTitle) {
 
-   detailsModal.classList.remove("hidden");
-   document.body.style.overflow = "hidden";
-   
- saveContinueWatching(
-  dramaTitle,
-  episodeNumber,
-  videoId
-);
-
   if (!videoId) {
 
     alert("Video is not available.");
 
     return;
   }
+
+  detailsModal.classList.remove("hidden");
+  document.body.style.overflow = "hidden";
+
+  saveContinueWatching(
+    dramaTitle,
+    episodeNumber,
+    videoId
+  );
 
   detailsContent.innerHTML = `
 
