@@ -675,8 +675,11 @@ function renderContinueWatching() {
 
 }
 function playEpisode(videoId, episodeNumber, dramaTitle) {
+
+   detailsModal.classList.remove("hidden");
+   document.body.style.overflow = "hidden";
    
-   saveContinueWatching(
+ saveContinueWatching(
   dramaTitle,
   episodeNumber,
   videoId
