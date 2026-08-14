@@ -747,24 +747,24 @@ function playEpisode(videoId, episodeNumber, dramaTitle) {
 
 function closeModal() {
 
-  // Stop YouTube video completely
-  const iframe =
-    detailsContent.querySelector("iframe");
+  // Find and completely remove YouTube player
+  const player =
+    detailsContent.querySelector(".youtube-player");
 
-  if (iframe) {
-    iframe.src = "";
+  if (player) {
+    player.remove();
   }
 
-  // Clear video/player content
-  detailsContent.innerHTML = "";
+  // Remove all modal content
+  detailsContent.replaceChildren();
 
   // Close modal
   detailsModal.classList.add("hidden");
 
-  // Enable page scrolling again
+  // Restore page scroll
   document.body.style.overflow = "";
-}
 
+}
 
 /* =====================================================
    SEARCH
