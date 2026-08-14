@@ -893,3 +893,72 @@ body {
         padding: 10px 14px;
     }
 }
+
+/* 💻 Desktop / Laptop Cinematic Layout */
+@media (min-width: 1025px) {
+
+    body {
+        overflow-x: hidden;
+    }
+
+    /* Main Content */
+    .container,
+    .movies-container {
+        width: 90%;
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+
+    /* Main Heading */
+    h1 {
+        font-size: 52px;
+        line-height: 1.15;
+    }
+
+    h2 {
+        font-size: 32px;
+    }
+
+    /* Movie Grid */
+    .movies-container {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 24px;
+    }
+
+    /* Movie Cards */
+    .movie-card {
+        width: 100%;
+        max-width: 230px;
+        margin: auto;
+        border-radius: 14px;
+        overflow: hidden;
+        transition: transform 0.35s ease,
+                    box-shadow 0.35s ease;
+    }
+
+    .movie-card:hover {
+        transform: translateY(-8px) scale(1.04);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.45);
+    }
+
+    /* Posters */
+    .movie-card img {
+        width: 100%;
+        aspect-ratio: 2 / 3;
+        object-fit: cover;
+        display: block;
+    }
+
+    /* Buttons */
+    .watch-btn,
+    .favorite-btn {
+        transition: all 0.3s ease;
+    }
+
+    .watch-btn:hover,
+    .favorite-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 0 22px rgba(255, 255, 255, 0.25);
+    }
+}
