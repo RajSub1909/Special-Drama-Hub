@@ -747,3 +747,15 @@ button {
 .movie-card:hover {
     transform: translateY(-6px) scale(1.03);
 }
+
+/* Button Smooth Glow */
+.watch-btn,
+.favorite-btn {
+    transition: all 0.3s ease;
+}
+
+.watch-btn:hover,
+.favorite-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 18px rgba(255, 255, 255, 0.25);
+}
