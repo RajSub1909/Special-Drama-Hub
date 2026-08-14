@@ -747,8 +747,21 @@ function playEpisode(videoId, episodeNumber, dramaTitle) {
 
 function closeModal() {
 
+  // Stop YouTube video completely
+  const iframe =
+    detailsContent.querySelector("iframe");
+
+  if (iframe) {
+    iframe.src = "";
+  }
+
+  // Clear video/player content
+  detailsContent.innerHTML = "";
+
+  // Close modal
   detailsModal.classList.add("hidden");
 
+  // Enable page scrolling again
   document.body.style.overflow = "";
 }
 
