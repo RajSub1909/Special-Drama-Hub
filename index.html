@@ -3,41 +3,341 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta name="theme-color" content="#09070d">
+  <meta name="description" content="Secret Drama Hub — your private drama world.">
+
   <title>Secret Drama Hub ❤️</title>
+
   <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-  <div class="login-container">
-  <div class="login-card">
-    <div class="heart">❤️</div>
 
-    <h1>Secret Drama Hub</h1>
-    <p class="subtitle">A special place made just for you 😌</p>
+  <!-- ================= LOGIN ================= -->
 
-    <form id="login-form">
-      <input
-        type="email"
-        id="email"
-        placeholder="Email address"
-        required
+  <section id="login-screen" class="screen login-screen">
+
+    <div class="login-glow glow-one"></div>
+    <div class="login-glow glow-two"></div>
+
+    <div class="login-card">
+
+      <div class="brand-heart">❤️</div>
+
+      <span class="eyebrow">PRIVATE • PERSONAL • SPECIAL</span>
+
+      <h1>Secret Drama Hub</h1>
+
+      <p class="subtitle">
+        A special place made just for you.
+      </p>
+
+      <form id="login-form">
+
+        <label for="email">Email</label>
+
+        <input
+          type="email"
+          id="email"
+          placeholder="Enter your email"
+          autocomplete="email"
+          required
+        >
+
+        <label for="password">Password</label>
+
+        <input
+          type="password"
+          id="password"
+          placeholder="Enter your password"
+          autocomplete="current-password"
+          required
+        >
+
+        <button type="submit" id="login-button">
+          <span>Enter My World</span>
+          <span>❤️</span>
+        </button>
+
+        <p id="login-message" role="alert"></p>
+
+      </form>
+
+      <p class="login-note">
+        🔒 Private access only
+      </p>
+
+    </div>
+
+  </section>
+
+
+  <!-- ================= APP ================= -->
+
+  <section id="app-screen" class="app-screen hidden">
+
+    <!-- NAVBAR -->
+
+    <header class="navbar">
+
+      <div class="nav-brand" data-action="home">
+
+        <span class="nav-logo">❤️</span>
+
+        <div>
+          <strong>Secret Drama Hub</strong>
+          <small>Your Drama World</small>
+        </div>
+
+      </div>
+
+      <div class="nav-actions">
+
+        <button
+          class="icon-button"
+          id="mobile-search-button"
+          aria-label="Search"
+        >
+          🔍
+        </button>
+
+        <button
+          class="logout-button"
+          id="logout-button"
+        >
+          Logout
+        </button>
+
+      </div>
+
+    </header>
+
+
+    <!-- SEARCH -->
+
+    <div class="search-area">
+
+      <div class="search-box">
+
+        <span>🔍</span>
+
+        <input
+          type="search"
+          id="search-input"
+          placeholder="Search dramas..."
+          autocomplete="off"
+        >
+
+        <button id="clear-search" class="clear-search hidden">
+          ×
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <!-- MAIN -->
+
+    <main class="main-content">
+
+      <!-- HERO -->
+
+      <section class="hero">
+
+        <div class="hero-content">
+
+          <span class="hero-tag">✨ WELCOME BACK</span>
+
+          <h2>Your Drama World</h2>
+
+          <p>
+            Discover your favorite stories, explore episodes,
+            and enjoy your private collection.
+          </p>
+
+          <button
+            class="primary-button"
+            data-scroll="featured-section"
+          >
+            Explore Dramas
+            <span>→</span>
+          </button>
+
+        </div>
+
+        <div class="hero-art">
+          <div class="hero-circle">🎬</div>
+          <div class="floating-card card-one">❤️</div>
+          <div class="floating-card card-two">⭐</div>
+          <div class="floating-card card-three">📺</div>
+        </div>
+
+      </section>
+
+
+      <!-- SEARCH RESULTS -->
+
+      <section
+        id="search-section"
+        class="content-section hidden"
       >
 
-      <input
-        type="password"
-        id="password"
-        placeholder="Password"
-        required
+        <div class="section-heading">
+
+          <div>
+            <span class="section-kicker">RESULTS</span>
+            <h2 id="search-title">Search Results</h2>
+          </div>
+
+        </div>
+
+        <div
+          id="search-results"
+          class="drama-grid"
+        ></div>
+
+        <div
+          id="no-results"
+          class="empty-state hidden"
+        >
+          <div>🔎</div>
+          <h3>No drama found</h3>
+          <p>Try another title or keyword.</p>
+        </div>
+
+      </section>
+
+
+      <!-- FEATURED -->
+
+      <section
+        id="featured-section"
+        class="content-section"
       >
 
-      <button type="submit">Enter ❤️</button>
+        <div class="section-heading">
 
-      <p id="login-message"></p>
-    </form>
+          <div>
+            <span class="section-kicker">HAND PICKED</span>
+            <h2>Featured Dramas</h2>
+          </div>
+
+          <button
+            class="text-button"
+            data-action="show-all"
+          >
+            View all →
+          </button>
+
+        </div>
+
+        <div
+          id="featured-grid"
+          class="drama-grid"
+        ></div>
+
+      </section>
+
+
+      <!-- LATEST -->
+
+      <section class="content-section">
+
+        <div class="section-heading">
+
+          <div>
+            <span class="section-kicker">JUST ADDED</span>
+            <h2>Latest Episodes</h2>
+          </div>
+
+        </div>
+
+        <div
+          id="latest-grid"
+          class="episode-grid"
+        ></div>
+
+      </section>
+
+
+      <!-- ALL DRAMAS -->
+
+      <section
+        id="all-section"
+        class="content-section hidden"
+      >
+
+        <div class="section-heading">
+
+          <div>
+            <span class="section-kicker">COLLECTION</span>
+            <h2>All Dramas</h2>
+          </div>
+
+        </div>
+
+        <div
+          id="all-grid"
+          class="drama-grid"
+        ></div>
+
+      </section>
+
+    </main>
+
+
+    <!-- FOOTER -->
+
+    <footer class="footer">
+
+      <div>
+        <strong>Secret Drama Hub ❤️</strong>
+        <p>Made with love for your private drama world.</p>
+      </div>
+
+      <span>🔒 Private Access</span>
+
+    </footer>
+
+  </section>
+
+
+  <!-- ================= DETAILS MODAL ================= -->
+
+  <div
+    id="details-modal"
+    class="modal hidden"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="details-title"
+  >
+
+    <div class="modal-backdrop" data-action="close-modal"></div>
+
+    <div class="modal-card">
+
+      <button
+        class="modal-close"
+        data-action="close-modal"
+        aria-label="Close"
+      >
+        ×
+      </button>
+
+      <div id="details-content"></div>
+
+    </div>
+
   </div>
-</div>
+
+
+  <!-- Supabase -->
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
   <script src="script.js"></script>
+
 </body>
 </html>
