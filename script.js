@@ -742,97 +742,72 @@ document.addEventListener("click", (event) => {
 
   if (playButton) {
 
-    playEpisode(
-      playButton.dataset.videoId,
-      playButton.dataset.episode,
-      playButton.dataset.drama
-    );
+  const videoId =
+    playButton.dataset.videoId;
 
+  const drama =
+    playButton.dataset.drama;
+
+  const episode =
+    playButton.dataset.episode;
+
+  if (!videoId) {
+    alert("Video is not available.");
     return;
   }
 
+  detailsContent.innerHTML = `
 
-  const actionElement =
-    event.target.closest("[data-action]");
+    <div style="width:100%;">
 
-  if (actionElement) {
+      <div
+        style="
+          position:relative;
+          width:100%;
+          aspect-ratio:16/9;
+          background:#000;
+          border-radius:16px;
+          overflow:hidden;
+        "
+      >
 
-    const action =
-      actionElement.dataset.action;
+        <iframe
+          src="https://www.youtube.com/embed/${encodeURIComponent(videoId)}?autoplay=1&rel=0"
+          title="${escapeHTML(drama)} Episode ${escapeHTML(episode)}"
+          style="
+            width:100%;
+            height:100%;
+            border:0;
+          "
+          allow="autoplay; encrypted-media; picture-in-picture"
+          allowfullscreen
+        ></iframe>
 
-    if (action === "close-modal") {
+      </div>
 
-      closeModal();
+      <div style="padding:18px 4px;">
 
-      return;
-    }
+        <span class="section-kicker">
+          ${escapeHTML(drama)}
+        </span>
 
+        <h2 style="margin-top:6px;">
+          Episode ${escapeHTML(episode)}
+        </h2>
 
-    if (action === "home") {
+        <button
+          class="play-button"
+          data-action="close-modal"
+          style="margin-top:15px;"
+        >
+          ← Back to Episodes
+        </button>
 
-      window.scrollTo({
-        top: 0,
-        behavior: "smooth"
-      });
+      </div>
 
-      return;
-    }
-
-
-    if (action === "show-all") {
-
-      renderAll();
-
-      return;
-    }
-
-
-    if (action === "back-to-episodes") {
-
-      const title =
-        document.querySelector(
-          "#details-title"
-        );
-
-      if (title) {
-
-        const drama =
-          dramas.find(
-            item =>
-              item.title ===
-              title.textContent
-          );
-
-        if (drama) {
-          openDrama(drama.id);
-        }
-      }
-
-      return;
-    }
-  }
-
-
-  const scrollElement =
-    event.target.closest("[data-scroll]");
-
-  if (scrollElement) {
-
-    const target =
-      document.getElementById(
-        scrollElement.dataset.scroll
-      );
-
-    if (target) {
-
-      target.scrollIntoView({
-        behavior: "smooth"
-      });
-    }
-  }
-
-});
-
+    </div>
+  `;
+}
 
 /* =====================================================
    KEYBOARD
