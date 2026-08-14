@@ -567,8 +567,119 @@ async function openDrama(dramaId) {
 /* =====================================================
    YOUTUBE PLAYER
    ===================================================== */
+/* =====================================================
+   CONTINUE WATCHING
+   ===================================================== */
 
+async function saveContinueWatching(
+  dramaTitle,
+  episodeNumber,
+  videoId
+) {
+
+  if (!currentUser) return;
+
+  try {
+
+    localStorage.setItem(
+      `continue_${currentUser.id}`,
+      JSON.stringify({
+        dramaTitle,
+        episodeNumber,
+        videoId,
+        updatedAt: new Date().toISOString()
+      })
+    );
+
+    renderContinueWatching();
+
+  } catch (error) {
+
+    console.error(
+      "Continue watching save error:",
+      error
+    );
+
+  }
+
+}
+
+
+function renderContinueWatching() {
+
+  if (!currentUser) return;
+
+  const continueSection =
+    document.getElementById("continue-section");
+
+  const continueGrid =
+    document.getElementById("continue-grid");
+
+  if (!continueSection || !continueGrid) return;
+
+  try {
+
+    const savedData =
+      localStorage.getItem(
+        `continue_${currentUser.id}`
+      );
+
+    if (!savedData) {
+
+      continueSection.classList.add("hidden");
+
+      return;
+    }
+
+    const item =
+      JSON.parse(savedData);
+
+    continueGrid.innerHTML = `
+
+      <article
+        class="episode-card"
+        data-continue="true"
+        data-video-id="${escapeHTML(item.videoId)}"
+        data-episode="${escapeHTML(item.episodeNumber)}"
+        data-drama="${escapeHTML(item.dramaTitle)}"
+      >
+
+        <span class="episode-number">
+          CONTINUE
+        </span>
+
+        <h3>
+          ${escapeHTML(item.dramaTitle)}
+        </h3>
+
+        <p>
+          Episode ${escapeHTML(item.episodeNumber)}
+          • Continue Watching ▶
+        </p>
+
+      </article>
+
+    `;
+
+    continueSection.classList.remove("hidden");
+
+  } catch (error) {
+
+    console.error(
+      "Continue watching render error:",
+      error
+    );
+
+  }
+
+}
 function playEpisode(videoId, episodeNumber, dramaTitle) {
+   
+   saveContinueWatching(
+  dramaTitle,
+  episodeNumber,
+  videoId
+);
 
   if (!videoId) {
 
