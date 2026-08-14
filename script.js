@@ -828,6 +828,20 @@ clearSearch.addEventListener("click", () => {
 
 document.addEventListener("click", (event) => {
 
+   const continueCard =
+  event.target.closest("[data-continue='true']");
+
+if (continueCard) {
+
+  playEpisode(
+    continueCard.dataset.videoId,
+    continueCard.dataset.episode,
+    continueCard.dataset.drama
+  );
+
+  return;
+}
+
   const dramaCardElement =
     event.target.closest(".drama-card");
 
