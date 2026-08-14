@@ -776,3 +776,74 @@ body {
         transform: translateY(0);
     }
 }
+
+/* 📱 Mobile Polishing */
+@media (max-width: 768px) {
+
+    body {
+        overflow-x: hidden;
+    }
+
+    /* Headings */
+    h1 {
+        font-size: 32px;
+        line-height: 1.2;
+    }
+
+    h2 {
+        font-size: 24px;
+    }
+
+    /* Movie Cards */
+    .movie-card {
+        width: 100%;
+        max-width: 180px;
+    }
+
+    .movie-card:hover {
+        transform: translateY(-4px) scale(1.02);
+    }
+
+    /* Movie Posters */
+    .movie-card img {
+        width: 100%;
+        height: auto;
+        object-fit: cover;
+    }
+
+    /* Buttons */
+    .watch-btn,
+    .favorite-btn {
+        font-size: 14px;
+        padding: 9px 12px;
+    }
+
+    /* Main Sections */
+    .container,
+    .movies-container {
+        width: 92%;
+        margin: auto;
+    }
+}
+
+/* 📱 Small Phones */
+@media (max-width: 480px) {
+
+    h1 {
+        font-size: 27px;
+    }
+
+    h2 {
+        font-size: 21px;
+    }
+
+    .movie-card {
+        max-width: 160px;
+    }
+
+    .watch-btn,
+    .favorite-btn {
+        font-size: 13px;
+        padding: 8px 10px;
+    }
+}
