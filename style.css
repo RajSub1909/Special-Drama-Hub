@@ -962,3 +962,24 @@ body {
         box-shadow: 0 0 22px rgba(255, 255, 255, 0.25);
     }
 }
+
+/* Profile Badge */
+.profile-badge {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-right: 15px;
+}
+
+.profile-name {
+    color: white;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+}
+
+.profile-role {
+    color: #aaa;
+    font-size: 10px;
+    margin-top: 2px;
+}
