@@ -738,3 +738,12 @@ button {
     font-size: 14px;
   }
 }
+
+/* Movie Card Hover Animation */
+.movie-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.movie-card:hover {
+    transform: translateY(-6px) scale(1.03);
+}
