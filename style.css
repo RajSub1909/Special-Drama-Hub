@@ -847,3 +847,49 @@ body {
         padding: 8px 10px;
     }
 }
+
+/* 📲 Tablet Polishing */
+@media (min-width: 481px) and (max-width: 1024px) {
+
+    body {
+        overflow-x: hidden;
+    }
+
+    h1 {
+        font-size: 38px;
+        line-height: 1.2;
+    }
+
+    h2 {
+        font-size: 28px;
+    }
+
+    .container,
+    .movies-container {
+        width: 90%;
+        margin: auto;
+    }
+
+    /* Tablet Movie Cards */
+    .movie-card {
+        width: 100%;
+        max-width: 210px;
+    }
+
+    .movie-card:hover {
+        transform: translateY(-5px) scale(1.025);
+    }
+
+    .movie-card img {
+        width: 100%;
+        height: auto;
+        object-fit: cover;
+    }
+
+    /* Tablet Buttons */
+    .watch-btn,
+    .favorite-btn {
+        font-size: 15px;
+        padding: 10px 14px;
+    }
+}
