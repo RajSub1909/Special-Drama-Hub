@@ -229,15 +229,35 @@ button {
 }
 
 .icon-button,
+/* Premium Logout Button */
 .logout-button {
-  border: 1px solid var(--border);
-  background: var(--card);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.06);
   color: white;
-  border-radius: 12px;
-  padding: 10px 14px;
+
+  border-radius: 10px;
+  padding: 10px 16px;
+
+  font-weight: 600;
+  letter-spacing: 0.3px;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.25s ease,
+    background 0.25s ease,
+    box-shadow 0.25s ease,
+    border-color 0.25s ease;
 }
 
-.logout-button:hover,
+.logout-button:hover {
+  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.22);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.28);
+}
+
+/* Search button ka existing hover effect safe rakho */
 .icon-button:hover {
   background: var(--card-hover);
 }
