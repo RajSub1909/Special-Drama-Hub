@@ -320,21 +320,20 @@ button {
   align-items: center;
   padding: 55px;
   margin-bottom: 60px;
-  
-  background:
-  linear-gradient(
-    90deg,
-    rgba(19, 13, 27, 0.94) 0%,
-    rgba(19, 13, 27, 0.78) 42%,
-    rgba(19, 13, 27, 0.35) 100%
-  ),
-  url("20260630_081502-IMG_STYLE.jpg");
 
-background-size: cover;
-background-position: center;
-background-repeat: no-repeat;
+  background-image:
+    linear-gradient(
+      90deg,
+      rgba(19, 13, 27, 0.92) 0%,
+      rgba(19, 13, 27, 0.65) 50%,
+      rgba(19, 13, 27, 0.18) 100%
+    ),
+    url("./20260630_081502-IMG_STYLE.jpg");
+
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
-
 .hero-content {
   max-width: 600px;
   position: relative;
