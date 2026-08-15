@@ -27,6 +27,8 @@ const logoutButton = document.getElementById("logout-button");
 
 const searchInput = document.getElementById("search-input");
 const clearSearch = document.getElementById("clear-search");
+const mobileSearchButton =
+  document.getElementById("mobile-search-button");
 
 const featuredGrid = document.getElementById("featured-grid");
 const latestGrid = document.getElementById("latest-grid");
@@ -837,6 +839,18 @@ clearSearch.addEventListener("click", () => {
   searchInput.focus();
 });
 
+mobileSearchButton.addEventListener("click", () => {
+
+  searchInput.scrollIntoView({
+    behavior: "smooth",
+    block: "center"
+  });
+
+  setTimeout(() => {
+    searchInput.focus();
+  }, 400);
+
+});
 
 /* =====================================================
    CLICK HANDLER
