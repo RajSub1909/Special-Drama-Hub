@@ -1000,3 +1000,45 @@ body {
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
 }
+
+/* Premium Profile Badge */
+#app-screen .profile-badge {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 7px 14px;
+    margin-right: 12px;
+
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    border-radius: 12px;
+
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+
+    transition: 
+        transform 0.3s ease,
+        background 0.3s ease,
+        box-shadow 0.3s ease;
+}
+
+#app-screen .profile-badge:hover {
+    transform: translateY(-2px);
+    background: rgba(255, 255, 255, 0.10);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+}
+
+#app-screen .profile-name {
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+#app-screen .profile-role {
+    margin-top: 2px;
+    color: rgba(255, 255, 255, 0.55);
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 1.2px;
+}
