@@ -1100,3 +1100,52 @@ body {
     font-weight: 600;
     letter-spacing: 1.2px;
 }
+
+/* =====================================
+   MOBILE NAVBAR FIX
+===================================== */
+
+@media (max-width: 600px) {
+
+  .navbar {
+    padding: 12px 14px;
+    gap: 10px;
+  }
+
+  /* Left brand */
+  .nav-brand strong {
+    font-size: 13px;
+  }
+
+  .nav-brand small {
+    font-size: 9px;
+  }
+
+  .nav-logo {
+    font-size: 18px;
+  }
+
+  /* Right side */
+  .nav-actions {
+    gap: 6px;
+  }
+
+  /* Hide secondary badge on small screens */
+  .profile-badge {
+    display: none;
+  }
+
+  /* Smaller search button */
+  .icon-button {
+    padding: 7px 9px;
+    font-size: 15px;
+  }
+
+  /* Smaller logout button */
+  .logout-button {
+    padding: 7px 10px;
+    font-size: 12px;
+    white-space: nowrap;
+  }
+
+}
