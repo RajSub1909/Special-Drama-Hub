@@ -991,3 +991,12 @@ body {
     -webkit-backdrop-filter: blur(14px);
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
+
+/* Premium Navbar Override */
+#app-screen .navbar {
+    background: rgba(20, 15, 30, 0.88);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+}
