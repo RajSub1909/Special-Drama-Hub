@@ -1149,3 +1149,64 @@ body {
   }
 
 }
+
+/* =====================================
+   FINAL MOBILE NAVBAR FIX
+===================================== */
+
+@media screen and (max-width: 600px) {
+
+  .navbar {
+    height: auto !important;
+    min-height: 64px;
+    padding: 10px 12px !important;
+    gap: 8px;
+  }
+
+  .nav-brand {
+    min-width: 0;
+    flex: 1;
+    gap: 8px;
+  }
+
+  .nav-logo {
+    font-size: 21px;
+    flex-shrink: 0;
+  }
+
+  .nav-brand div {
+    min-width: 0;
+  }
+
+  .nav-brand strong {
+    font-size: 13px;
+    white-space: nowrap;
+  }
+
+  .nav-brand small {
+    font-size: 9px;
+    white-space: nowrap;
+  }
+
+  .nav-actions {
+    flex-shrink: 0;
+    gap: 5px;
+  }
+
+  /* Mobile par badge hide */
+  .nav-actions .profile-badge {
+    display: none !important;
+  }
+
+  .icon-button {
+    padding: 7px 8px !important;
+    min-width: 34px;
+  }
+
+  .logout-button {
+    padding: 7px 9px !important;
+    font-size: 11px !important;
+    white-space: nowrap;
+  }
+
+}
