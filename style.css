@@ -983,3 +983,11 @@ body {
     font-size: 10px;
     margin-top: 2px;
 }
+
+/* Premium Glass Navbar */
+.navbar {
+    background: rgba(15, 15, 20, 0.75);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
