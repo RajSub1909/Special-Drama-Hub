@@ -444,24 +444,27 @@ async function openDrama(dramaId) {
     document.body.style.overflow = "hidden";
 
     // Get drama
-    const { data: drama, error: dramaError } =
-      await supabaseClient
-        .from("dramas")
-        .select("*")
-        .eq("id", dramaId)
-        .single();
+   const [
+  { data: drama, error: dramaError },
+  { data: episodes, error: episodeError }
+] = await Promise.all([
 
-    if (dramaError) throw dramaError;
+  supabaseClient
+    .from("dramas")
+    .select("*")
+    .eq("id", dramaId)
+    .single(),
 
-    // Get real episodes
-    const { data: episodes, error: episodeError } =
-      await supabaseClient
-        .from("episodes")
-        .select("*")
-        .eq("drama_id", dramaId)
-        .order("episode_number", { ascending: true });
+  supabaseClient
+    .from("episodes")
+    .select("*")
+    .eq("drama_id", dramaId)
+    .order("episode_number", { ascending: true })
 
-    if (episodeError) throw episodeError;
+]);
+
+if (dramaError) throw dramaError;
+if (episodeError) throw episodeError;
 
     detailsContent.innerHTML = `
 
